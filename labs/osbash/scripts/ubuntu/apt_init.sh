@@ -19,16 +19,16 @@ function set_apt_proxy {
 
     if [ -f $APT_FILE ] && grep -q $PRX_KEY $APT_FILE; then
         # apt proxy has already been set (by preseed/kickstart)
-        if [ -n "${VM_PROXY-}" ]; then
+        if [ -n "${APT_PROXY-}" ]; then
             # Replace with requested proxy
-            sudo sed -i "s#^\($PRX_KEY\).*#\1 \"$VM_PROXY\";#" $APT_FILE
+            sudo sed -i "s#^\($PRX_KEY\).*#\1 \"$APT_PROXY\";#" $APT_FILE
         else
             # No proxy requested -- remove
             sudo sed -i "s#^$PRX_KEY.*##" $APT_FILE
         fi
-    elif [ -n "${VM_PROXY-}" ]; then
+    elif [ -n "${APT_PROXY-}" ]; then
         # Proxy requested, but none configured: add line
-        echo "$PRX_KEY \"$VM_PROXY\";" | sudo tee -a $APT_FILE
+        echo "$PRX_KEY \"$APT_PROXY\";" | sudo tee -a $APT_FILE
     fi
 }
 
